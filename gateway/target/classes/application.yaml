@@ -1,0 +1,74 @@
+server:
+  port: 8080
+spring:
+  mail:
+    host: smtp.163.com
+    protocol: smtp
+    default-encoding: UTF-8
+    #发件人
+    username: gaoyuanming_1@163.com
+    #授权码
+    password: a123456
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/bjpowernode?characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: lion12345
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  application:
+    name: cloud-gateway
+  cloud:
+    #配置路由
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials Vary, RETAIN_UNIQUE
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:8083"
+              - "http://localhost:8082"
+              - "http://localhost:8084"
+              - "http://localhost:8085"
+              - "http://localhost:8086"
+            allowedMethods:
+              - "GET"
+              - "POST"
+              - "DELETE"
+              - "PUT"
+              - "OPTIONS"
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 360000
+      #这里可以配置多个路由
+      routes:
+        - id: payment_distribution #路由的id
+          uri: http://localhost:8084 #匹配后提供服务的路由地址
+          predicates:
+            - Path=/api/distribution/**, /api/driver/**, /api/vehicle/**
+        - id: payment_commodity #路由的id
+          uri: http://localhost:8085 #匹配后提供服务的路由地址
+          predicates:
+            - Path=/api/commodity/**, /api/inventory/**
+        - id: payment_employee #路由的id
+          uri: http://localhost:8086 #匹配后提供服务的路由地址
+          predicates:
+            - Path=/api/employee/**, /api/sale/**, /api/warehouse/**
+        - id: payment_routh #路由的id
+          uri: http://localhost:8082 #匹配后提供服务的路由地址
+          predicates:
+            - Path=/** #断言 路径相匹配的进行路由
+
+
+eureka:
+  instance:
+    hostname: cloud-gateway
+  client:
+    register-with-eureka: true #表明将自己注册进EurekaServer
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8081/eureka/

@@ -1,0 +1,47 @@
+server:
+  port: 8082
+spring:
+  mail:
+    host: smtp.163.com
+    protocol: smtp
+    default-encoding: UTF-8
+    #发件人
+    username: gaoyuanming_1@163.com
+    #授权码
+    password: a123456
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/bjpowernode?characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: lion12345
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  application:
+    name: cloud-api-service
+
+
+eureka:
+  client:
+    register-with-eureka: true #表明将自己注册进EurekaServer
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8081/eureka/
+  instance:
+    instance-id: api8082 #注册的服务名称
+
+resilience4j:
+    thread-pool-bulkhead:
+        configs:
+            default:
+                maxThreadPoolSize: 4 # 最⼤线程池⼤⼩
+                coreThreadPoolSize: 2 # 核⼼线程池⼤⼩
+                queueCapacity: 2 # 队列容量
+        instances:
+            backendA:
+                baseConfig: default
+            backendB:
+                maxThreadPoolSize: 1
+                coreThreadPoolSize: 1
+                queueCapacity: 1
