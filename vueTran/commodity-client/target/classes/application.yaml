@@ -1,0 +1,68 @@
+server:
+  port: 8085
+spring:
+  mail:
+    host: smtp.163.com
+    protocol: smtp
+    default-encoding: UTF-8
+    #发件人
+    username: Wan_XQ@163.com
+    #授权码
+    password: UUUBRAQXFEHXXHVC
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/bjpowernode?characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: lion12345
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  application:
+    name: cloud-commodity-service
+
+
+eureka:
+  client:
+    register-with-eureka: true #表明将自己注册进EurekaServer
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8081/eureka/
+  instance:
+    instance-id: Commodity8085 #注册的服务名称
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        register-health-indicator: true # 是否注册断路器健康指标
+        sliding-window-type: COUNT_BASED # 窗口类型，COUNT_BASED 或 TIME_BASED
+        sliding-window-size: 10 # 窗口大小，根据配置的窗口类型不同，其含义也不同
+        minimum-number-of-calls: 10 # 断路器的最小调用次数，在达到此次数之前，断路器始终关闭
+        permitted-number-of-calls-in-half-open-state: 5 # 半开状态下允许的最大调用次数
+        automatic-transition-from-open-to-half-open-enabled: true # 是否允许从打开状态自动转换到半开状态
+        wait-duration-in-open-state: 30s # 断路器在打开状态下的等待时间，用于判断是否重新尝试调用原始方法
+        failure-rate-threshold: 50 # 故障率阈值，达到该阈值时，断路器将打开
+        slow-call-rate-threshold: 100 # 慢调用率阈值，达到该阈值时，断路器将打开
+        slow-call-duration-threshold: 5s # 慢调用持续时间阈值，用于定义慢调用的时间
+        writable-stack-trace-enabled: true # 是否启用断路器的可写堆栈跟踪
+    instances:
+      adminService:
+        base-config: default # 选择默认配置
+        register-health-indicator: true # 是否注册断路器健康指标
+        event-consumer-buffer-size: 10 # 事件消费缓冲区大小
+        ring-buffer-size-in-closed-state: 100 # 在关闭状态下使用的环形缓冲区大小
+        ring-buffer-size-in-half-open-state: 10 # 在半开状态下使用的环形缓冲区大小
+      #        ring-buffer-size-in-open-state: 10 # 在打开状态下使用的环形缓冲区大小
+      adminService2:
+        base-config: default # 选择默认配置
+        register-health-indicator: true # 是否注册断路器健康指标
+        event-consumer-buffer-size: 10 # 事件消费缓冲区大小
+        ring-buffer-size-in-closed-state: 100 # 在关闭状态下使用的环形缓冲区大小
+        ring-buffer-size-in-half-open-state: 10 # 在半开状态下使用的环形缓冲区大小
+      #        ring-buffer-size-in-open-state: 10 # 在打开状态下使用的环形缓冲区大小
+      adminService3:
+        base-config: default # 选择默认配置
+        register-health-indicator: true # 是否注册断路器健康指标
+        event-consumer-buffer-size: 10 # 事件消费缓冲区大小
+        ring-buffer-size-in-closed-state: 100 # 在关闭状态下使用的环形缓冲区大小
+        ring-buffer-size-in-half-open-state: 10 # 在半开状态下使用的环形缓冲区大小
