@@ -13,7 +13,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/bjpowernode?characterEncoding=utf8&serverTimezone=UTC
     username: root
-    password: lion12345
+    password: 123456
   jpa:
     hibernate:
       ddl-auto: update
@@ -30,3 +30,18 @@ eureka:
       defaultZone: http://localhost:8081/eureka/
   instance:
     instance-id: api8082 #注册的服务名称
+
+resilience4j:
+    thread-pool-bulkhead:
+        configs:
+            default:
+                maxThreadPoolSize: 4 # 最⼤线程池⼤⼩
+                coreThreadPoolSize: 2 # 核⼼线程池⼤⼩
+                queueCapacity: 2 # 队列容量
+        instances:
+            backendA:
+                baseConfig: default
+            backendB:
+                maxThreadPoolSize: 1
+                coreThreadPoolSize: 1
+                queueCapacity: 1
