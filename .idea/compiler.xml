@@ -11,6 +11,7 @@
         <module name="commodity-client" />
         <module name="api" />
         <module name="employee-client" />
+        <module name="eureka-server" />
         <module name="gateway" />
       </profile>
     </annotationProcessing>
@@ -24,7 +25,7 @@
       <module name="api" options="-parameters" />
       <module name="commodity-client" options="-parameters" />
       <module name="employee-client" options="-parameters" />
-      <module name="eureka-server" options="" />
+      <module name="eureka-server" options="-parameters" />
       <module name="eureka-server-v1" options="-parameters" />
       <module name="gateway" options="-parameters" />
     </option>
