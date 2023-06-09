@@ -6,9 +6,9 @@ spring:
     protocol: smtp
     default-encoding: UTF-8
     #发件人
-    username: gaoyuanming_1@163.com
+    username: Wan_XQ@163.com
     #授权码
-    password: a123456
+    password: UUUBRAQXFEHXXHVC
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/bjpowernode?characterEncoding=utf8&serverTimezone=UTC

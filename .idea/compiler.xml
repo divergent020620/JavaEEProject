@@ -8,15 +8,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Driver-client" />
-        <module name="commodity-client" />
         <module name="api" />
         <module name="employee-client" />
+        <module name="eureka-server" />
         <module name="gateway" />
+        <module name="commodity-client" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="eureka-server-v1" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -24,8 +22,7 @@
       <module name="api" options="-parameters" />
       <module name="commodity-client" options="-parameters" />
       <module name="employee-client" options="-parameters" />
-      <module name="eureka-server" options="" />
-      <module name="eureka-server-v1" options="-parameters" />
+      <module name="eureka-server" options="-parameters" />
       <module name="gateway" options="-parameters" />
     </option>
   </component>

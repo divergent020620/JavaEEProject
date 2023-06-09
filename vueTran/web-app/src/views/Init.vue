@@ -24,7 +24,7 @@
       <a-button :loading="submitLoading" class="submit-btn" type="primary" @click="submitLogin">
         初始化系统
       </a-button>
-      <div class="des">物流管理系统 - Copyright 2021 高元明</div>
+      <div class="des">物流管理系统 - 袁毅堂，饶睿，万兴全</div>
     </div>
   </div>
 </template>

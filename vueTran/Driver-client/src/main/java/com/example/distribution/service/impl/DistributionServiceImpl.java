@@ -1,4 +1,5 @@
 package com.example.distribution.service.impl;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 import com.example.distribution.model.entity.Distribution;
 import com.example.distribution.model.entity.Driver;
@@ -25,6 +26,7 @@ public class DistributionServiceImpl implements DistributionService {
     @Resource
     private VehicleRepository vehicleRepository;
 
+    @CircuitBreaker(name = "distributionService", fallbackMethod = "saveFallback")
     @Override
     public Distribution save(Distribution distribution) throws Exception {
         if (distributionRepository.findById(distribution.getId()).isEmpty()) {
@@ -42,6 +44,11 @@ public class DistributionServiceImpl implements DistributionService {
         return distributionRepository.save(distribution);
     }
 
+    public Distribution saveFallback(Distribution distribution, Throwable ex) {
+        // 在这里添加断路器打开后的备用逻辑
+        // 返回一个默认的Distribution对象，或者抛出异常等等
+        return null;
+    }
     @Override
     public List<Distribution> findAll() {
         return distributionRepository.findAll();
