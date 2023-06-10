@@ -16,6 +16,7 @@
       <module name="employee-client" target="17" />
       <module name="eureka-server" target="17" />
       <module name="gateway" target="17" />
+      <module name="main-project" target="1.7" />
       <module name="vueTran" target="1.7" />
     </bytecodeTargetLevel>
   </component>
