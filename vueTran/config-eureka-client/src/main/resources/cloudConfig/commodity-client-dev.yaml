@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8085
 spring:
   mail:
     host: smtp.163.com
@@ -19,7 +19,16 @@ spring:
       ddl-auto: update
     open-in-view: false
   application:
-    name: api
+    name: commodity-client
+
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
+        health-check-interval: 3600s
+        heartbeat:
 
 
 
@@ -30,9 +39,7 @@ eureka:
     service-url:
       defaultZone: http://localhost:8081/eureka/
   instance:
-    instance-id: api8082 #注册的服务名称
-
-
+    instance-id: Commodity8085 #注册的服务名称
 resilience4j:
   circuitbreaker:
     configs:

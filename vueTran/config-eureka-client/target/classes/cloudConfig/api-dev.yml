@@ -55,14 +55,14 @@ resilience4j:
         event-consumer-buffer-size: 10 # 事件消费缓冲区大小
         ring-buffer-size-in-closed-state: 100 # 在关闭状态下使用的环形缓冲区大小
         ring-buffer-size-in-half-open-state: 10 # 在半开状态下使用的环形缓冲区大小
-      #        ring-buffer-size-in-open-state: 10 # 在打开状态下使用的环形缓冲区大小
+#        ring-buffer-size-in-open-state: 10 # 在打开状态下使用的环形缓冲区大小
       adminService2:
         base-config: default # 选择默认配置
         register-health-indicator: true # 是否注册断路器健康指标
         event-consumer-buffer-size: 10 # 事件消费缓冲区大小
         ring-buffer-size-in-closed-state: 100 # 在关闭状态下使用的环形缓冲区大小
         ring-buffer-size-in-half-open-state: 10 # 在半开状态下使用的环形缓冲区大小
-      #        ring-buffer-size-in-open-state: 10 # 在打开状态下使用的环形缓冲区大小
+#        ring-buffer-size-in-open-state: 10 # 在打开状态下使用的环形缓冲区大小
       adminService3:
         base-config: default # 选择默认配置
         register-health-indicator: true # 是否注册断路器健康指标

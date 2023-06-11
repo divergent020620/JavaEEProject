@@ -8,11 +8,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Driver-client" />
+        <module name="config-eureka-client" />
+        <module name="commodity-client" />
         <module name="api" />
         <module name="employee-client" />
         <module name="eureka-server" />
         <module name="gateway" />
-        <module name="commodity-client" />
       </profile>
     </annotationProcessing>
   </component>
@@ -21,6 +22,7 @@
       <module name="Driver-client" options="-parameters" />
       <module name="api" options="-parameters" />
       <module name="commodity-client" options="-parameters" />
+      <module name="config-eureka-client" options="-parameters" />
       <module name="employee-client" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
       <module name="gateway" options="-parameters" />

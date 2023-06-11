@@ -1,0 +1,25 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: config-eureka-client
+  http:
+    converters:
+      preferred-json-mapper: gson
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/cloudConfig/
+        bootstrap: true
+  profiles:
+    active: native
+eureka:
+  client:
+    register-with-eureka: true #表明将自己注册进EurekaServer
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8081/eureka/
+  instance:
+    instance-id: configserver8083 #注册的服务名称
+    preferIpAddress: true

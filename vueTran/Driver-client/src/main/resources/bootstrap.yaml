@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: Driver-client
+  profiles:
+    active: dev
+  cloud:
+    config:
+      uri: http://localhost:8083
+      name: api
+      fail-fast: false  #失败快速响应 就是启动的时候，如果启动失败能够快速响应，而不是日志都打印一大堆了，才报错
+      discovery:
+        service-id: config-eureka-client  #这里是config服务端注册到eureka的服务名称
+        enabled: true  #表示是否从配置中心读取文件
+      profile: dev
+    bootstrap:
+      enable: true

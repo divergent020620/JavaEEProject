@@ -12,6 +12,7 @@
     <module>Driver-client</module>
       <module>commodity-client</module>
       <module>employee-client</module>
+    <module>config-eureka-client</module>
   </modules>
   <packaging>pom</packaging>
 
@@ -47,7 +48,6 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
-
 
            <dependency>
             <groupId>io.github.resilience4j</groupId>

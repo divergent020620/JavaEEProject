@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8084
 spring:
   mail:
     host: smtp.163.com
@@ -19,8 +19,16 @@ spring:
       ddl-auto: update
     open-in-view: false
   application:
-    name: api
+    name: Driver-client
 
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
+        health-check-interval: 3600s
+        heartbeat:
 
 
 eureka:
@@ -30,7 +38,7 @@ eureka:
     service-url:
       defaultZone: http://localhost:8081/eureka/
   instance:
-    instance-id: api8082 #注册的服务名称
+    instance-id: Driver8084 #注册的服务名称
 
 
 resilience4j:
@@ -55,14 +63,14 @@ resilience4j:
         event-consumer-buffer-size: 10 # 事件消费缓冲区大小
         ring-buffer-size-in-closed-state: 100 # 在关闭状态下使用的环形缓冲区大小
         ring-buffer-size-in-half-open-state: 10 # 在半开状态下使用的环形缓冲区大小
-      #        ring-buffer-size-in-open-state: 10 # 在打开状态下使用的环形缓冲区大小
+#        ring-buffer-size-in-open-state: 10 # 在打开状态下使用的环形缓冲区大小
       adminService2:
         base-config: default # 选择默认配置
         register-health-indicator: true # 是否注册断路器健康指标
         event-consumer-buffer-size: 10 # 事件消费缓冲区大小
         ring-buffer-size-in-closed-state: 100 # 在关闭状态下使用的环形缓冲区大小
         ring-buffer-size-in-half-open-state: 10 # 在半开状态下使用的环形缓冲区大小
-      #        ring-buffer-size-in-open-state: 10 # 在打开状态下使用的环形缓冲区大小
+#        ring-buffer-size-in-open-state: 10 # 在打开状态下使用的环形缓冲区大小
       adminService3:
         base-config: default # 选择默认配置
         register-health-indicator: true # 是否注册断路器健康指标
