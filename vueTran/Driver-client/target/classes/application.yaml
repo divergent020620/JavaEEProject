@@ -1,0 +1,60 @@
+server:
+  port: 8084
+spring:
+  mail:
+    host: smtp.163.com
+    protocol: smtp
+    default-encoding: UTF-8
+    #发件人
+    username: gaoyuanming_1@163.com
+    #授权码
+    password: a123456
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ee_db?characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: Wodemimahenniu1
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  application:
+    name: cloud-driver-service
+  kafka:
+    bootstrap-servers: localhost:9092
+    #生产者
+    producer:
+      acks: 1
+      retries: 3
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    #消费者
+    consumer:
+      #默认消费组名
+      group-id: driver-consumer
+      #关闭自动提交
+      enable-auto-commit: false
+      #提交间隔的毫秒 spring.kafka.consumer.auto-commit-interval.ms=60000
+      # kafka消费指定每次最大消费消息数量
+      max-poll-records: 1000
+      #当各分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，从头开始消费
+      #auto-offset-reset: earliest
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      #手动提交
+      ack-mode: manual_immediate
+      # 设置批量消费
+      type: batch
+      # 并发数设置
+      concurrency: 3
+
+eureka:
+  client:
+    register-with-eureka: true #表明将自己注册进EurekaServer
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8081/eureka/
+  instance:
+    instance-id: Driver8084 #注册的服务名称

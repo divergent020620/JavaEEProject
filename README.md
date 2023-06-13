@@ -1,222 +1,465 @@
-# JavaEEProjectServer
+
+
+
+
+**Java EE 架构与应用 Assignment 4 物流管理系统  系统设计报告** 
+
+项目地址链接：[divergent020620/JavaEEProjectServer at Assignment_4 (github.com)](https://github.com/divergent020620/JavaEEProjectServer/tree/Assignment_4)
 
 | 成员 | 组长     | 组员1    | 组员2    |
 | ---- | -------- | -------- | -------- |
 | 学号 | 20301182 | 20301168 | 20301174 |
 | 姓名 | 袁毅堂   | 饶睿     | 万兴全   |
 
-四次作业详见本仓库其它分支：
 
-第一次作业：[divergent020620/JavaEEProjectServer at Assignment_1 (github.com)](https://github.com/divergent020620/JavaEEProjectServer/tree/Assignment_1)
 
-第二次作业：[divergent020620/JavaEEProjectServer at Assignment_2 (github.com)](https://github.com/divergent020620/JavaEEProjectServer/tree/Assignment_2)
+# 要求
 
-第三次作业：[divergent020620/JavaEEProjectServer at Assignment_3 (github.com)](https://github.com/divergent020620/JavaEEProjectServer/tree/Assignment_3)
+Assignment 4, Event-notification for microservices
+	In this assignment, you are asked to further improve your assignment 3 project by adding the following features:
+_1, Integration of microservices with **event-driven brokers**._
+_2, Distributed configuration with **spring cloud config server**.(optional)_
+_3, Distributed log tracing with spring cloud sleuth or **Zipkin** (optional)_
 
-第四次作业：[divergent020620/JavaEEProjectServer at Assignment_4 (github.com)](https://github.com/divergent020620/JavaEEProjectServer/tree/Assignment_4)
+1, You need to rebuild or develop microservices which are integrated with (**kafka**) **message-queue**, tVo form an event-driven architecture.
+2, Optional, integrating **spring cloud config** server for centralized configuration.
+3, Optional, integrating Sleuth for centralized log tracing.‘
 
-四次系统设计报告详见其他分支，也可在本仓库的wiki中查看。
 
-仓库wiki：[Pages · divergent020620/JavaEEProjectServer Wiki (github.com)](https://github.com/divergent020620/JavaEEProjectServer/wiki)
 
----
-- [x] Assignment 1, A Shipping and Transportation Web application Development with Spring MVC and More
-  
-- In this assignment, you are asked to develop functions for a shipping and transportation web application.
-  
-- 作业 1，使用 Spring MVC 等进行运输和运输 Web 应用程序开发
-- 
-  在此作业中，您将被要求为运输和运输 Web 应用程序开发功能。
+# Event Driven Brokers
 
+它是一种基于事件驱动架构的消息代理或消息中间件，用于处理和分发事件。它允许系统中的各个组件通过发布和订阅事件的方式进行通信和交互。事件驱动的代理提供了解耦和灵活性，使得系统能够快速响应和处理事件。
 
-**_Requirements:_**
 
-1, Using Spring MVC + Spring Data JPA/Mybatis + Thymeleaf for Web Application Development.
 
-2, Authentication and authorization for web access is necessary.
+# Kafka
 
-3, Unit testing for repository level and integration testing controllers are required.
+一个分布式流处理平台和消息队列系统。Kafka旨在处理高容量、高吞吐量的实时数据流，并提供可持久化的、分布式的消息发布与订阅机制。以下是一些关键概念和特点：
 
-4, You are encouraged to apply spring security, cookies, session management, interceptors /filters to improve the system functions.
+1. 消息传递：Kafka基于发布-订阅模式，允许多个生产者将消息发布到一个或多个主题（topic），然后多个消费者可以订阅这些主题并接收消息。
+2. 分布式架构：Kafka采用分布式架构，允许在多个服务器上进行扩展和容错。消息分区存储在不同的服务器上，以实现水平扩展和高可用性。
+3. 高吞吐量：Kafka具有出色的吞吐量和低延迟，适用于处理大规模的实时数据流。
+4. 持久化存储：Kafka使用持久化的消息存储，允许消息在被消费之后仍然保留在系统中，以供后续的消费者进行消费。
+5. 消费者组：多个消费者可以组成一个消费者组，每个消费者组内的消费者可以共同消费一个主题的消息，实现负载均衡和故障转移。
 
 
-**_要求：_**
 
-1、使用Spring MVC + Spring Data JPA/Mybatis + Thymeleaf进行Web应用开发。
+## 配置
 
-2、Web访问的身份验证和授权是必要的。
+### Zookeeper配置
 
-3、需要对仓库级和集成测试控制器进行单元测试。
+在..\kafka_2.12-3.1.0\kafka\config文件夹中，修改zookeepers.properties如下：
 
-4，鼓励您应用spring security，cookie，会话管理，拦截器/过滤器来改进系统功能。
+`clientPort=2181`
 
+使得zookeeper在运行时端口2181上打开
 
-**_Delivery:_**
+Zookeeper是一个分布式协调服务，用于管理和协调分布式系统中的各个组件。它提供了分布式锁、命名服务、配置管理等功能，为分布式系统提供了一致性、可靠性和协调性。在Kafka中，Zookeeper用于管理和维护Kafka集群的元数据信息，包括主题（topic）、分区（partition）、消费者组（consumer group）等。
 
-1, You need to archive the project source code and running and testing screen capture to a github repository.
+具体来说，Kafka使用Zookeeper来实现以下功能：
 
-2, Providing a system design report is necessary.
+1. 配置管理：Kafka的服务器配置和集群配置信息存储在Zookeeper中。当Kafka服务器启动时，它会从Zookeeper获取必要的配置信息。
+2. 元数据管理：Kafka的主题、分区和消费者组等元数据信息存储在Zookeeper中。生产者和消费者通过Zookeeper获取元数据信息，以了解消息的存储和消费情况。
+3. 高可用性和故障转移：Kafka使用Zookeeper进行领导者选举。每个分区在集群中都有一个领导者（leader）和多个副本（replica），Zookeeper用于选举和维护分区的领导者，以实现高可用性和故障转移。
 
-3, Hand in due to 2023-4-30
+### Kafka配置
 
+在..\kafka_2.12-3.1.0\kafka\config文件夹中，修改server.properties如下：
 
-**_交货：_**
+`zookeeper.connect=localhost:2181`
 
-1，您需要将项目源代码以及运行和测试屏幕捕获存档到 github 存储库。
+使得kafka服务器可以连接zookeeper
 
-2、提供系统设计报告是必要的。
+`log.dirs=./kafka-logs`
 
-3、交期2023-4-30
+使得kafka可以记录日志，便于后续消息存储与分配
 
+### 开启Kafka服务器
 
----
-- [x] Assignment 2, Re-design of assignment1 with REST API and More
-- 
-  In this assignment, you are asked to re-develop the shipping and transportation management web application using REST api and Ajax. ^5ed977
-  
-- 作业 2，使用 REST API 重新设计作业 1 等
-- 
-  在此作业中，您需要使用 REST api 和 Ajax 重新开发运输和运输管理 Web 应用程序。
+可通过命令行开启，这里使用实现配置好的.cmd文件开启：
 
+![image-20230613143959083](Assignment_4_design_report.assets/image-20230613143959083.png)
 
-**_Requirements:_**
+开启后效果如下图所示：
 
-1, Design and implement the shipping and transportation services with Restful API.
+![image-20230613144044275](Assignment_4_design_report.assets/image-20230613144044275.png)
 
-2, API Authentication and authorization using spring security and JWT is necessary.
+![image-20230613144119892](Assignment_4_design_report.assets/image-20230613144119892.png)
 
-3, Continuous Unit testing for new added functions and components are required.
+### springboot项目连接Kafka服务器
 
-4, You are encouraged to apply openapi document, rate limiting and etc to improve your rest api.
+加入依赖：
 
-5, Web-End may need redesign with ajax and vue.js replacing thymeleaf.
+```xml
+<dependency>
+  <groupId>org.springframework.kafka</groupId>
+  <artifactId>spring-kafka</artifactId>
+</dependency>
+```
 
 
-**_要求：_**
 
-1，使用Restful API设计和实施运输和运输服务。
+在application.yaml中配置连接Kafka服务器，以api微服务为例：
 
-2、API认证和授权使用弹簧安全和JWT是必要的。
+```yaml
+kafka:
+  bootstrap-servers: localhost:9092
+  #生产者
+  producer:
+    acks: 1
+    retries: 3
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  #消费者
+  consumer:
+    #默认消费组名
+    group-id: api-consumer
+    #关闭自动提交
+    enable-auto-commit: false
+    #提交间隔的毫秒 spring.kafka.consumer.auto-commit-interval.ms=60000
+    # kafka消费指定每次最大消费消息数量
+    max-poll-records: 1000
+    #当各分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，从头开始消费
+    #auto-offset-reset: earliest
+    auto-offset-reset: latest
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  listener:
+    #手动提交
+    ack-mode: manual_immediate
+    # 设置批量消费
+    type: batch
+    # 并发数设置
+    concurrency: 3
+```
+
+Kafka服务器在9092端口上打开
+
+消费者名，每次最大消费量以及并发数等根据微服务组件各自情况进行调整
+
+
+
+将所有后端接口进行注解，向相应的Kafka服务器中的话题中发送消息，以商品管理微服务组件中url为/api/commodity中的接口为例：
+
+```java
+package com.example.commodity.controller;
+
+import com.example.commodity.model.entity.Commodity;
+import com.example.commodity.service.CommodityService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
-3、需要对新增功能和组件进行连续单元测试。
+import javax.annotation.Resource;
+import java.util.List;
 
-4，我们鼓励您应用openapi文档，速率限制等来改进您的REST API。
+@RestController
+@RequestMapping("/api/commodity")
+@PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN' ,'ROLE_COMMODITY')")
+public class CommodityController {
 
-5，Web端可能需要重新设计ajax和vue.js取代thymeleaf。
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
 
+    @Resource
+    private CommodityService commodityService;
+
+    @PostMapping("")
+    public Commodity save(@RequestBody Commodity commodity) {
+        String topic = "commodity-topic";
+        String normalMessage = "commodity of name " + commodity.getName() + " saved";
+        kafkaTemplate.send(topic, normalMessage);
+        return commodityService.save(commodity);
+    }
+
+    @DeleteMapping("")
+    public void delete(String id) {
+        String topic = "commodity-topic";
+        String normalMessage = "commodity of id " + id + " deleted";
+        kafkaTemplate.send(topic, normalMessage);
+        commodityService.delete(id);
+    }
+
+    @PutMapping("")
+    public void update(@RequestBody Commodity commodity) {
+        String topic = "commodity-topic";
+        String normalMessage = "commodity of id " + commodity.getId() + " updated";
+        kafkaTemplate.send(topic, normalMessage);
+        commodityService.update(commodity);
+    }
+
+    @GetMapping("")
+    public List<Commodity> findAll() {
+        String topic = "commodity-topic";
+        String normalMessage = "commodities listed";
+        kafkaTemplate.send(topic, normalMessage);
+        return commodityService.findAll();
+    }
+
+    @GetMapping("/search/{name}")
+    public List<Commodity> findByLikeName(@PathVariable String name) {
+        String topic = "commodity-topic";
+        String normalMessage = "commodity of name " + name + " found";
+        kafkaTemplate.send(topic, normalMessage);
+        return commodityService.findAllByLikeName(name);
+    }
+
+    @GetMapping("/{id}")
+    public Commodity findById(@PathVariable String id) {
+        String topic = "commodity-topic";
+        String normalMessage = "commodity of id " + id + " found";
+        kafkaTemplate.send(topic, normalMessage);
+        return commodityService.findById(id);
+    }
+}
+```
+
+
+
+### 运行截图
+
+完成所有方法配置后，前端在调用相应接口时即会向对应的Kafka话题中发送消息，可通过在..\kafka_2.12-3.1.0\kafka\bin\windows目录下运行命令：
+
+​	`./kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic <your-topic> --from-beginning`
+
+将 your-topic 替换为想要查看的话题，来查看Kafka服务器中该话题下接收到的所有消息，以driver-topic话题中接收到的
+
+消息为例：
 
-**_Delivery:_**
+![image-20230613150602855](Assignment_4_design_report.assets/image-20230613150602855.png)
 
-1, You need to archive the project source code and running and testing screen capture to a github repository.
 
-2, Provide a system design report.
 
-3, Hand in due to 2023-5-22
+# Zipkin
 
+Zipkin是一个开源的分布式跟踪系统，用于帮助开发人员收集、查找和分析分布式系统中的请求追踪数据。
 
-**_交货：_**
+Zipkin的主要功能是跟踪请求在分布式系统中的流动，以及记录请求在不同组件之间的传递情况和延迟。它通过在系统的各个组件中插入特殊的跟踪代码，收集请求的跟踪信息并生成可视化的追踪图。这些追踪图展示了请求在系统中的路径、处理时间以及各个组件的性能指标，帮助开发人员快速定位和解决分布式系统中的性能问题。
 
-1，您需要将项目源代码以及运行和测试屏幕捕获存档到 github 存储库。
+以下是Zipkin的一些主要特点和组成部分：
 
-2、提供系统设计报告。
+1. 跟踪数据收集：Zipkin通过在系统中的不同组件中嵌入跟踪代码，收集请求的跟踪数据。跟踪数据包括请求的起始点、终止点、处理时间、各个组件之间的传递情况等。
+2. 分布式追踪图：Zipkin将收集到的跟踪数据进行整理和可视化，生成分布式追踪图。追踪图展示了请求在系统中的路径和各个组件的性能指标，帮助开发人员分析和理解分布式系统的行为。
+3. 跨服务追踪：Zipkin支持跨多个服务的追踪。当一个请求经过多个服务时，每个服务都会将跟踪数据传递给Zipkin服务器，最终形成完整的请求追踪路径。
+4. 分布式上下文传播：Zipkin利用分布式上下文传播技术，将请求的上下文信息（如请求ID、跟踪ID等）在不同的服务之间传递，确保请求在分布式系统中的可追踪性。
+5. 链路追踪分析：Zipkin提供了一些分析工具和报告，帮助开发人员理解系统的性能瓶颈和潜在问题。开发人员可以通过这些工具进行性能优化和故障排除。
 
-3、交期2023-5-22
 
 
----
-- [x] Assignment 3, A shipping and transportation services development with Micro-services Architecture and Spring-Cloud
-- 
-	 In this assignment, you are asked to refactor the shipping and transportation management server-end using spring cloud.
-  
-- 任务3，使用微服务架构和Spring-Cloud开发航运和运输服务
-  
-- 在此作业中，系统会要求您使用 Spring Cloud 重构运输和运输管理服务器端。
-
-
-**_Requirements:_**
-
-1, Re-structuring your shipping and transportation services as micro-services.
-
-2, Service discovery with Eureka is necessary.
-
-3, Circuit breaker implementation with Resilience4j or Hystrix.
-
-4, Oauth2 authorization server integrated.
-
-5, Expose API to external users with Gateway
-
-6, Centralized configuration and tracking with Spring cloud config server and sleuth.
-
-
-**_要求：_**
-
-1，将您的运输和运输服务重组为微服务。
-
-2，使用尤里卡进行服务发现是必要的。
-
-3，断路器实现弹性4j或Hystrix。
-
-4、Oauth2授权服务器集成。
-
-5、使用网关向外部用户公开API
-
-6，使用Spring云配置服务器和侦探进行集中配置和跟踪。
-
-
-**_Delivery:_**
-
-1, You need to archive the project source code and running and testing screen capture to a github repository.
-
-2, Provide a design report.
-
-3, Hand in due to 2023-6-xx
-
-
-**_交货：_**
-
-1，您需要将项目源代码以及运行和测试屏幕捕获存档到 github 存储库。
-
-2、提供设计报告。
-
-3、2023-6-xx上交
-
-
----
-- [x] Assignment 4, Event-notification for microservices
-- 
-  In this assignment, you are asked to further improve your assignment 3 project by adding the following features:
-  
-- _1, Integration of microservices with event-driven brokers._
-  
-- _2, Distributed configuration with spring cloud config server.(optional)_
-  
-- _3, Distributed log tracing with spring cloud sleuth or Zipkin (optional)_
-  -
-  作业 4，微服务的事件通知
-  
-- 在此作业中，您需要通过添加以下功能来进一步改进作业 3 项目：
-  
-- _1、微服务与事件驱动brokers.的集成
-
-- 2，使用spring-cloud服务器进行分布式配置。（可选）_
-  
-- _3、使用spring-cloud侦探或 Zipkin 进行分布式日志跟踪（可选）_
-
-
-**_Requirements:_**
-
-1, You need to rebuild or develop microservices which are integrated with (kafka) message-queue, to form an event-driven architecture.
-
-2, Optional, integrating spring cloud config server for centralized configuration.
-
-3, Optional, integrating Sleuth for centralized log tracing.
-
-
-**_交货：_**
-
-1，您需要将项目源代码以及运行和测试屏幕捕获存档到 github 存储库。
-
-2、提供设计报告。
-
-3、2023-6-xx上交
-
+## 配置
+
+### Zipkin 服务端配置
+
+引入依赖：
+
+```xml
+<dependency>
+    <groupId>io.zipkin.java</groupId>
+    <artifactId>zipkin-server</artifactId>
+    <version>2.12.9</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-zipkin</artifactId>
+    <version>2.2.8.RELEASE</version>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>druid-spring-boot-starter</artifactId>
+    <version>1.1.23</version>
+</dependency>
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-autoconfigure</artifactId>
+    <version>2.4.2</version>
+</dependency>
+```
+
+
+
+在application.properties中配置端口：
+
+```xml
+spring.zipkin.base-url=http://localhost:9411
+```
+
+
+
+启动类，需要加入注解@EnableZipkinServer：
+
+```java
+package com.example.zipkinserver;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import zipkin2.server.internal.EnableZipkinServer;
+
+@EnableZipkinServer
+@SpringBootApplication
+public class ZipkinServerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ZipkinServerApplication.class, args);
+    }
+
+}
+```
+
+
+
+同样可以使用官方提供的jar包
+
+
+
+### Zipkin 客户端配置
+
+引入依赖：
+
+```xml
+<dependency>
+  <groupId>io.zipkin.brave</groupId>
+  <artifactId>brave-core</artifactId>
+  <version>3.9.0</version>
+</dependency>
+<dependency>
+  <groupId>io.zipkin.brave</groupId>
+  <artifactId>brave-spancollector-http</artifactId>
+  <version>3.9.0</version>
+</dependency>
+<dependency>
+  <groupId>io.zipkin.brave</groupId>
+  <artifactId>brave-web-servlet-filter</artifactId>
+  <version>3.9.0</version>
+</dependency>
+<dependency>
+  <groupId>io.zipkin.brave</groupId>
+  <artifactId>brave-okhttp</artifactId>
+  <version>3.9.0</version>
+</dependency>
+<dependency>
+  <groupId>org.springframework.cloud</groupId>
+  <artifactId>spring-cloud-starter-sleuth</artifactId>
+</dependency>
+
+```
+
+
+
+zipkin收集与配置类：
+
+```java
+public class ZipkinConfig {
+    //span（一次请求信息或者一次链路调用）信息收集器
+    @Bean
+    public SpanCollector spanCollector() {
+        Config config = HttpSpanCollector.Config.builder()
+                .compressionEnabled(false)// 默认false，span在transport之前是否会被gzipped
+                .connectTimeout(5000)
+                .flushInterval(1)
+                .readTimeout(6000)
+                .build();
+        return HttpSpanCollector.create("http://localhost:9411", config, new EmptySpanCollectorMetricsHandler());
+    }
+
+    //作为各调用链路，只需要负责将指定格式的数据发送给zipkin
+    @Bean
+    public Brave brave(SpanCollector spanCollector){
+        Builder builder = new Builder("cloud-api-service");//指定serviceName
+        builder.spanCollector(spanCollector);
+        builder.traceSampler(Sampler.create(1));//采集率
+        return builder.build();
+    }
+
+
+    //设置server的（服务端收到请求和服务端完成处理，并将结果发送给客户端）过滤器
+    @Bean
+    public BraveServletFilter braveServletFilter(Brave brave) {
+        BraveServletFilter filter = new BraveServletFilter(brave.serverRequestInterceptor(),
+                brave.serverResponseInterceptor(), new DefaultSpanNameProvider());
+        return filter;
+    }
+
+    //设置client的（发起请求和获取到服务端返回信息）拦截器
+    @Bean
+    public OkHttpClient okHttpClient(Brave brave){
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .addInterceptor(new BraveOkHttpRequestResponseInterceptor(
+                        brave.clientRequestInterceptor(),
+                        brave.clientResponseInterceptor(),
+                        new DefaultSpanNameProvider())).build();
+        return httpClient;
+    }
+}
+```
+
+在每个微服务组件中，需要将ZipKin配置类中的以下名称改为相应微服务的application.yaml中对应的applications.name名称，如：
+
+ `Builder builder = new Builder("cloud-api-service");//指定serviceName`
+
+
+
+业务代码，以展示权限列表为例：
+
+```java
+package com.example.api.controller;
+
+import com.example.api.model.enums.Role;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/role")
+public class RoleController {
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    @Autowired
+    private OkHttpClient client;
+
+    @GetMapping("")
+    public Role[] list() throws Exception {
+        String topic = "api-topic";
+        String normalMessage = "role list complete";
+        kafkaTemplate.send(topic, normalMessage);
+        Request request = new Request.Builder().url("http://localhost:8082/cloud-api-service/api").build();
+        Response response = client.newCall(request).execute();
+        return Role.ROLES;
+    }
+
+}
+```
+
+此时即可向Zipkin服务器发送trace
+
+
+
+### 运行截图
+
+![image-20230613160836428](Assignment_4_design_report.assets/image-20230613160836428.png)
